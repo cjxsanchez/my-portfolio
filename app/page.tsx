@@ -6,7 +6,7 @@ import { Typewriter } from "react-simple-typewriter";
 import { 
   FaGithub, FaLinkedin, FaEnvelope, FaExternalLinkAlt, FaArrowUp,
   FaLaptopCode, FaServer, FaTools, FaDownload, FaBriefcase, FaUser, 
-  FaMapMarkerAlt, FaGraduationCap, FaBullseye, FaTimes
+  FaMapMarkerAlt, FaGraduationCap, FaBullseye, FaTimes, FaBars
 } from "react-icons/fa";
 
 import { 
@@ -26,6 +26,7 @@ const fadeUp: Variants = {
 
 const Navbar = ({ activeSection }: { activeSection: string }) => {
   const [scrolled, setScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -40,6 +41,8 @@ const Navbar = ({ activeSection }: { activeSection: string }) => {
       <div className="text-xl font-bold tracking-wider text-accent cursor-pointer" onClick={() => window.scrollTo(0,0)}>
         Portfolio<span className="text-white">.</span>
       </div>
+
+      {/* Desktop Navigation */}
       <ul className="hidden md:flex space-x-8">
         {navLinks.map((item) => {
           const sectionId = item.toLowerCase();
@@ -57,6 +60,51 @@ const Navbar = ({ activeSection }: { activeSection: string }) => {
       <a href="/resume.pdf" download className="hidden md:flex items-center gap-2 px-5 py-2 border border-accent text-accent rounded-md hover:bg-accent hover:text-white transition-all duration-300 shadow-[0_0_10px_rgba(236,72,153,0.1)] hover:shadow-[0_0_15px_rgba(236,72,153,0.4)]">
         <FaDownload /> Resume
       </a>
+
+      {/* Mobile Hamburger Button */}
+      <button 
+        className="md:hidden text-2xl text-accent hover:text-pink-400 transition-colors z-50"
+        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        aria-label="Toggle menu"
+      >
+        {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
+      </button>
+
+      {/* Mobile Dropdown Menu (Fixed Background) */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            // Changed from transparent "glass" to a solid dark background with a heavy shadow
+            className="absolute top-full left-0 w-full bg-[#0f172a] border-b border-white/10 py-8 flex flex-col items-center gap-6 shadow-[0_30px_60px_rgba(0,0,0,0.9)] md:hidden z-40"
+          >
+            {navLinks.map((item) => {
+              const sectionId = item.toLowerCase();
+              const isActive = activeSection === sectionId;
+              return (
+                <a 
+                  key={item} 
+                  href={`#${sectionId}`} 
+                  onClick={() => setIsMobileMenuOpen(false)} // Close menu on click
+                  className={`text-lg transition-colors duration-300 ${isActive ? 'text-accent font-bold' : 'text-gray-200 hover:text-white'}`}
+                >
+                  {item}
+                </a>
+              );
+            })}
+            <a 
+              href="/resume.pdf" 
+              download 
+              onClick={() => setIsMobileMenuOpen(false)} // Close menu on click
+              className="flex items-center gap-2 px-8 py-3 mt-4 border border-accent text-accent rounded-md hover:bg-accent hover:text-white transition-all duration-300 shadow-[0_0_10px_rgba(236,72,153,0.2)]"
+            >
+              <FaDownload /> Download Resume
+            </a>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 };
@@ -325,10 +373,8 @@ const Projects = () => {
 };
 
 const Certifications = () => {
-  // State to track which certificate is currently clicked
   const [selectedCert, setSelectedCert] = useState<{ title: string; issuer: string; image: string } | null>(null);
 
-  // Updated Cisco Certifications array
   const certs = [
     { title: "Junior Cybersecurity Analyst Career Path Exam", issuer: "Cisco Networking Academy", image: "/junior-cyber.png" },
     { title: "Ethical Hacker", issuer: "Cisco Networking Academy", image: "/ethical-hacker.png" },
@@ -344,7 +390,6 @@ const Certifications = () => {
         <div className="h-[1px] bg-gray-700 flex-grow ml-4"></div>
       </motion.h2>
 
-      {/* Grid of Clickable Certificates */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {certs.map((cert, idx) => (
           <motion.div 
@@ -356,7 +401,6 @@ const Certifications = () => {
             onClick={() => setSelectedCert(cert)}
             className="group relative glass p-6 rounded-xl border border-white/5 hover:border-accent/40 cursor-pointer hover:-translate-y-2 hover:shadow-[0_0_20px_rgba(236,72,153,0.15)] transition-all duration-300 overflow-hidden flex flex-col justify-between"
           >
-            {/* Subtle glow background on hover */}
             <div className="absolute inset-0 bg-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-0"></div>
             
             <div className="relative z-10">
@@ -371,7 +415,6 @@ const Certifications = () => {
         ))}
       </div>
 
-      {/* Full Screen Image Modal */}
       <AnimatePresence>
         {selectedCert && (
           <motion.div 
@@ -385,10 +428,9 @@ const Certifications = () => {
               initial={{ scale: 0.95, opacity: 0, y: 20 }} 
               animate={{ scale: 1, opacity: 1, y: 0 }} 
               exit={{ scale: 0.95, opacity: 0, y: 20 }}
-              onClick={(e) => e.stopPropagation()} // Prevents clicking inside the image from closing it
+              onClick={(e) => e.stopPropagation()} 
               className="relative w-full max-w-4xl glass rounded-2xl p-2 border border-white/10 shadow-2xl"
             >
-              {/* Close Button */}
               <button 
                 onClick={() => setSelectedCert(null)}
                 className="absolute -top-12 right-0 text-white/70 hover:text-accent transition-colors p-2 text-2xl bg-darkBg/50 rounded-full hover:bg-darkBg"
@@ -396,7 +438,6 @@ const Certifications = () => {
                 <FaTimes />
               </button>
               
-              {/* Image Container */}
               <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-black/40 flex items-center justify-center">
                 <p className="absolute text-gray-500 font-mono text-sm z-0">Loading image...</p>
                 <Image 
@@ -408,7 +449,6 @@ const Certifications = () => {
                 />
               </div>
               
-              {/* Footer text in Modal */}
               <div className="p-4 text-center mt-2">
                 <h3 className="text-xl font-bold text-white">{selectedCert.title}</h3>
                 <p className="text-gray-400 font-mono text-sm mt-1">{selectedCert.issuer}</p>
@@ -422,7 +462,6 @@ const Certifications = () => {
 };
 
 const Contact = () => {
-  // ⬇️ TYPE YOUR ACTUAL EMAIL ADDRESS HERE! ⬇️
   const myEmail = "johncarlsanchez06@gmail.com"; 
 
   return (
@@ -434,7 +473,6 @@ const Contact = () => {
       </motion.p>
       
       <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="flex flex-col sm:flex-row justify-center items-center gap-6">
-        {/* The href uses the mailto: protocol combined with your email variable */}
         <a href={`mailto:${myEmail}`} className="w-full sm:w-auto px-8 py-4 bg-transparent border border-accent text-accent rounded-md font-medium hover:bg-accent hover:text-white transition-all duration-300 flex items-center justify-center gap-3 group">
           <FaEnvelope className="group-hover:animate-bounce" /> Say Hello
         </a>
