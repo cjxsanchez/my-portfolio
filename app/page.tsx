@@ -77,7 +77,6 @@ const Navbar = ({ activeSection }: { activeSection: string }) => {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            // Changed from transparent "glass" to a solid dark background with a heavy shadow
             className="absolute top-full left-0 w-full bg-[#0f172a] border-b border-white/10 py-8 flex flex-col items-center gap-6 shadow-[0_30px_60px_rgba(0,0,0,0.9)] md:hidden z-40"
           >
             {navLinks.map((item) => {
@@ -165,13 +164,13 @@ const About = () => {
       <div className="grid md:grid-cols-5 gap-12 items-start">
         <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="md:col-span-3 text-gray-300 leading-relaxed space-y-6 text-lg">
           <p>
-            Hello! I'm an aspiring developer with a keen eye for creating modern and functional digital experiences. My interest in web development sparked when I realized the power of turning logic and code into interfaces that people interact with daily.
+            Hello! I'm an aspiring developer with a keen eye for creating modern and functional digital experiences. My interest in web development started when I discovered how code and logic can turn into interfaces people use every day.
           </p>
           <p>
-            Currently, I am completing my <span className="text-accent font-semibold">Bachelor of Science in Information Technology</span>. Throughout my academic journey, I've had the privilege of building systems that solve real-world problems, such as digital records hubs and accreditation tracking systems.
+            I’m currently finishing my <span className="text-accent font-semibold">Bachelor of Science in Information Technology</span>. Along the way, I’ve built systems that solve real-world problems, including digital records hubs and accreditation tracking platforms.
           </p>
           <p>
-            My main focus these days is mastering the <span className="text-white font-semibold">React/Next.js ecosystem</span> alongside robust backend technologies. When I'm not at my computer, you can usually find me analyzing strategies in mobile games or staying active on the badminton court.
+            My career goal is to become a full-stack developer, creating modern, accessible, and high-performance applications. When I’m not at my computer, you can usually find me playing mobile games or out in nature.
           </p>
         </motion.div>
 
@@ -184,7 +183,7 @@ const About = () => {
                 src="/sanchez, john carl.jpg" 
                 alt="John Carl S. Sanchez"
                 fill
-                className="object-cover group-hover:scale-110 transition-transform duration-500 grayscale hover:grayscale-0"
+                className="object-cover group-hover:scale-110 transition-transform duration-500" // REMOVED grayscale and hover:grayscale-0 HERE
               />
             </div>
           </div>
